@@ -1,0 +1,82 @@
+<html>
+
+<head>
+
+</head>
+<body>
+
+
+<input title="Ejemplo de tooltip" type="text" class="form-control is-valid formatterAmount" id="monto" name="monto" required onkeyup="amountFormatter(this.id);"  placeholder="0,00" maxlength="14">
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+<script type="text/javascript">
+
+
+function FormatoCI(n) {
+	n = String(n);
+	var RgX = /^(.*\s)?([-+\u00A3\u20AC]?\d+)(\d{3}\b)/;
+	return n == (n = n.replace(RgX, "$1$2.$3")) ? n : FormatoCI(n);
+}
+
+function amountFormatter(arg) {
+	var campo = document.getElementById(arg);
+	var amount = campo.value;
+	var entero;
+	var decimal;
+
+	amount = replaceAll(amount, '.', '');
+	amount = replaceAll(amount, ',', '');
+
+	if(amount.length > 2) {
+		entero = FormatoCI(parseFloat(amount.substring(0, amount.length-2)));
+		decimal =  eval(amount.substring(amount.length-2, amount.length));
+
+		if(decimal < 10) {
+			decimal = "0" + decimal;
+		}
+
+		campo.value = entero + "," + decimal;
+	}
+
+	else {
+		if(amount.length<2) {
+			amount = "0" + amount;
+		}
+
+		if(amount==="0") {
+             amount = "00";
+        }
+
+		campo.value =  "0,"+ amount;
+	}
+}
+
+function replaceAll( text, busca, reemplaza ){
+  while (text.toString().indexOf(busca) != -1){
+    text = text.toString().replace(busca,reemplaza);
+  }
+  return text;
+}
+
+
+		
+$(".formatterAmount").bind("keypress",onlyNumbers).attr("placeholder", "0,00");
+
+function onlyNumbers(e) {
+	var key = (window.Event) ? e.which : e.keyCode;						
+	if (key != 8 && key != 0 && (key < 48 || key > 57)) {
+		e.preventDefault();
+		return false;
+	}
+}
+</script>
+
+
+
+</body>
+</html>
